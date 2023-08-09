@@ -1,20 +1,39 @@
+
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import IndexView from '@/views/IndexView.vue'
+import ProductoView from '@/views/ProductoView.vue'
+import store from '@/store/index.js'; 
+
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: HomeView
+    path: '/login',
+    name: 'login',
+    component: LoginView,
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    path: '/',
+    name: 'Index',
+    component: IndexView,
+     // Agregar el guardián de navegación antes de entrar a la ruta de inicio
+     beforeEnter: (to, from, next) => {
+      // Verificar si el usuario está autenticado utilizando el estado de Vuex
+      if (store.state.username) {
+        // El usuario está autenticado, permitir el acceso a la vista de inicio
+        next();
+      } else {
+        // El usuario no está autenticado, redirigirlo a la vista de inicio de sesión
+        next({ name: 'login' });
+      }
+      }
+  },
+  {
+    path: '/producto/:id',
+    props: true,
+    name: 'Producto',
+    component: ProductoView,
+  },
 ]
 
 const router = createRouter({
@@ -23,3 +42,4 @@ const router = createRouter({
 })
 
 export default router
+

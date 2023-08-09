@@ -1,30 +1,51 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+         <router-link to="/">Home</router-link>
+        </li>
+      </ul>
+       <router-link v-if="!$store.state.username" to="/login"></router-link>
+       <div>
+       <router-link v-if="$store.state.username" @click="logout" :to="{ name: 'login' }"> {{ $store.state.username }}</router-link>
+          <router-link v-if="$store.state.username" @click="logout" :to="{ name: 'login' }">Logout</router-link>
+          </div>
+    </div>
+  </div>
+</nav>
   <router-view/>
 </template>
 
+<script>
+export default {
+  methods: {
+    logout() {
+      this.$store.commit('logout');
+      // Redirigir al usuario a la vista de inicio de sesión (LoginView) después de hacer logout
+      this.$router.push({ name: 'login' });
+    }
+  },
+  mounted() {
+    this.$store.commit('initializeStore');
+  }
+}
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+nav a{
+  padding: 10px;
+  color: white;
+  text-decoration: none
 }
-
-nav {
-  padding: 30px;
+nav a:hover{
+  color: white;
 }
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+nav{
+  height:55px;
+  background-color: #8692f7;
 }
-
-nav a.router-link-exact-active {
-  color: #42b983;
+#navbarNav{
+  justify-content: space-between
 }
 </style>
